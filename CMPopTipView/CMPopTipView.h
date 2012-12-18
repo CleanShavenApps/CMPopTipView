@@ -105,6 +105,7 @@ typedef enum {
 
 @interface CMPopTipView : UIView {
 	UIColor					*backgroundColor;
+    UIColor                 *shadowColor;
 	id<CMPopTipViewDelegate>	delegate;
 	NSString				*message;
 	id						targetObject;
@@ -126,6 +127,7 @@ typedef enum {
 }
 
 @property (nonatomic, retain)			UIColor					*backgroundColor;
+@property (nonatomic, retain)			UIColor					*shadowColor;
 @property (nonatomic, assign)		id<CMPopTipViewDelegate>	delegate;
 @property (nonatomic, assign)			BOOL					disableTapToDismiss;
 @property (nonatomic, assign)			BOOL					dismissTapAnywhere;

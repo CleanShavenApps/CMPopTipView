@@ -143,7 +143,7 @@
 	CGContextAddPath(c, bubblePath);
     CGContextSaveGState(c);
 	CGContextSetShadow(c, CGSizeMake(0, 3), 5);
-	CGContextSetRGBFillColor(c, 0.0, 0.0, 0.0, 0.9);
+	CGContextSetFillColorWithColor(c, self.shadowColor.CGColor);
 	CGContextFillPath(c);
     CGContextRestoreGState(c);
     
@@ -534,6 +534,7 @@
 		self.textColor = [UIColor whiteColor];
 		self.textAlignment = UITextAlignmentCenter;
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
+        self.shadowColor = [UIColor colorWithWhite:0 alpha:0.9];
         self.borderColor = [UIColor blackColor];
         self.animation = CMPopTipAnimationSlide;
         self.dismissTapAnywhere = NO;
