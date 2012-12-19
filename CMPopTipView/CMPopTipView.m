@@ -36,6 +36,7 @@
 
 @synthesize autoDismissTimer = _autoDismissTimer;
 @synthesize backgroundColor;
+@synthesize shadowColor;
 @synthesize delegate;
 @synthesize message;
 @synthesize customView;
@@ -567,6 +568,8 @@
 }
 
 - (void)dealloc {
+
+    [shadowColor release];
 	[_autoDismissTimer release];
 	[_dismissTarget release];
 	[backgroundColor release];
