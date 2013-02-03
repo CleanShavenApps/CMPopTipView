@@ -243,17 +243,23 @@
 		self.targetObject = targetView;
 	}
     
+	UIView *finalContainerView = containerView;
+	if (!finalContainerView)
+		finalContainerView = [[UIApplication sharedApplication] keyWindow];
+	
     // If we want to dismiss the bubble when the user taps anywhere, we need to insert
     // an invisible button over the background.
     if ( self.dismissTapAnywhere ) {
         self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.dismissTarget addTarget:self action:@selector(touchesBegan:withEvent:) forControlEvents:UIControlEventTouchUpInside];
         [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
-        self.dismissTarget.frame = containerView.bounds;
-        [containerView addSubview:self.dismissTarget];
+        self.dismissTarget.frame = finalContainerView.bounds;
+        [finalContainerView addSubview:self.dismissTarget];
     }
 	
-	[containerView addSubview:self];
+	
+	
+	[finalContainerView addSubview:self];
     
 	// Size of rounded rect
 	CGFloat rectWidth;
@@ -261,29 +267,29 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         // iPad
         if (maxWidth) {
-            if (maxWidth < containerView.frame.size.width) {
+            if (maxWidth < finalContainerView.frame.size.width) {
                 rectWidth = maxWidth;
             }
             else {
-                rectWidth = containerView.frame.size.width - 20;
+                rectWidth = finalContainerView.frame.size.width - 20;
             }
         }
         else {
-            rectWidth = (int)(containerView.frame.size.width/3);
+            rectWidth = (int)(finalContainerView.frame.size.width/3);
         }
     }
     else {
         // iPhone
         if (maxWidth) {
-            if (maxWidth < containerView.frame.size.width) {
+            if (maxWidth < finalContainerView.frame.size.width) {
                 rectWidth = maxWidth;
             }
             else {
-                rectWidth = containerView.frame.size.width - 10;
+                rectWidth = finalContainerView.frame.size.width - 10;
             }
         }
         else {
-            rectWidth = (int)(containerView.frame.size.width*2/3);
+            rectWidth = (int)(finalContainerView.frame.size.width*2/3);
         }
     }
 
@@ -300,12 +306,12 @@
     
 	bubbleSize = CGSizeMake(textSize.width + cornerRadius*2, textSize.height + cornerRadius*2);
 	
-	UIView *superview = containerView.superview;
+	UIView *superview = finalContainerView.superview;
 	if ([superview isKindOfClass:[UIWindow class]])
-		superview = containerView;
+		superview = finalContainerView;
 	
 	CGPoint targetRelativeOrigin    = [targetView.superview convertPoint:targetView.frame.origin toView:superview];
-	CGPoint containerRelativeOrigin = [superview convertPoint:containerView.frame.origin toView:superview];
+	CGPoint containerRelativeOrigin = [superview convertPoint:finalContainerView.frame.origin toView:superview];
     
 	CGFloat pointerY;	// Y coordinate of pointer target (within containerView)
 	
@@ -314,14 +320,14 @@
         pointerY = 0.0;
         pointDirection = PointDirectionUp;
     }
-    else if (targetRelativeOrigin.y > containerRelativeOrigin.y+containerView.bounds.size.height) {
-        pointerY = containerView.bounds.size.height;
+    else if (targetRelativeOrigin.y > containerRelativeOrigin.y+finalContainerView.bounds.size.height) {
+        pointerY = finalContainerView.bounds.size.height;
         pointDirection = PointDirectionDown;
     }
     else {
         pointDirection = _preferredPointDirection;
-        CGPoint targetOriginInContainer = [targetView convertPoint:CGPointMake(0.0, 0.0) toView:containerView];
-        CGFloat sizeBelow = containerView.bounds.size.height - targetOriginInContainer.y;
+        CGPoint targetOriginInContainer = [targetView convertPoint:CGPointMake(0.0, 0.0) toView:finalContainerView];
+        CGFloat sizeBelow = finalContainerView.bounds.size.height - targetOriginInContainer.y;
         if (pointDirection == PointDirectionAny) {
             if (sizeBelow > targetOriginInContainer.y) {
                 pointerY = targetOriginInContainer.y + targetView.bounds.size.height;
@@ -342,9 +348,9 @@
         }
     }
     
-	CGFloat W = containerView.bounds.size.width;
+	CGFloat W = finalContainerView.bounds.size.width;
 	
-	CGPoint p = [targetView.superview convertPoint:targetView.center toView:containerView];
+	CGPoint p = [targetView.superview convertPoint:targetView.center toView:finalContainerView];
 	CGFloat x_p = p.x;
 	CGFloat x_b = x_p - roundf(bubbleSize.width/2);
 	if (x_b < sidePadding) {
